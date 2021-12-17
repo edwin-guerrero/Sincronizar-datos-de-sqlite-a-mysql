@@ -76,13 +76,11 @@ public class SecondFragment extends Fragment {
         db= new DatabaseHelper(getActivity().getApplicationContext());
         names = new ArrayList<>();
 
-
         broadcastReceiver = new BroadcastReceiver(){
             public void onReceive (Context context, Intent intent){
                 loadNames();
             }
         };
-
         registerReceiver (broadcastReceiver, new IntentFilter(DATA_SAVED_BRODCAST));
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -92,8 +90,6 @@ public class SecondFragment extends Fragment {
 
             }
         });
-
-
     }
 
     private void registerReceiver(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter) {
