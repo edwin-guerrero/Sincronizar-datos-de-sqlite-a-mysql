@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,7 @@ public class SecondFragment extends Fragment {
     public static final int NAME_NOT_SYNCED_WITH_SERVER = 0;
 
     //trasmision para saber si los datos se sincornizaron
-    public static final String DATA_SAVED_BRODCAST = "net.simplifiedcoding.datasaved";
+    public static final String DATA_SAVED_BROADCAST = "net.simplifiedcoding.datasaved";
 
     //Receptor de la trasmisión que indica el estado de la sincronozación
     private BroadcastReceiver broadcastReceiver;
@@ -61,6 +62,7 @@ public class SecondFragment extends Fragment {
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
+
     ) {
 
         binding = FragmentSecondBinding.inflate(inflater, container, false);
@@ -71,28 +73,35 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        registerReceiver(new NetworkStateChecker(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
         db= new DatabaseHelper(getActivity().getApplicationContext());
         names = new ArrayList<>();
 
+        loadNames();
+
+        //receptor de transmisión para actualizar el estado de sincronización
         broadcastReceiver = new BroadcastReceiver(){
             public void onReceive (Context context, Intent intent){
+                //Carga los registros nuevamente
                 loadNames();
             }
         };
-        registerReceiver (broadcastReceiver, new IntentFilter(DATA_SAVED_BRODCAST));
+
+        /*IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        filter
+
+        registerReceiver (new NetworkStateChecker(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        registerReceiver (broadcastReceiver, new IntentFilter(DATA_SAVED_BROADCAST));*/
+
+
+
+        //binding.listViewNames.setAdapter(new NameAdapter());
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveNameToLocalStorage();
-
+                saveNameToLocalStorage(binding.editTextName.getText().toString(),0);
             }
         });
-    }
-
-    private void registerReceiver(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter) {
     }
 
     /*Este metodo carga los nombres de la base local con estado de sincronizacion */
@@ -109,7 +118,9 @@ public class SecondFragment extends Fragment {
             }while (cursor.moveToNext());
         }
         nameAdapter = new NameAdapter(getActivity().getApplicationContext(), R.layout.names, names);
-        listViewNames.setAdapter(nameAdapter);
+        binding.listViewNames.setAdapter(nameAdapter);
+        //listViewNames.setAdapter(nameAdapter);
+
     }
 
     /*Este metodo actualiza la lista*/
@@ -117,7 +128,7 @@ public class SecondFragment extends Fragment {
 
     /*Este metodo guarda los registros de forma local*/
     private void saveNameToLocalStorage(String name, int status) {
-        editTextName.setText("");
+        binding.editTextName.setText("");
         db.addName(name, status);
         Name n = new Name(name, status);
         names.add(n);

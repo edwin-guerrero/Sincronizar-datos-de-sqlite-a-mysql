@@ -66,7 +66,7 @@ public class NetworkStateChecker extends BroadcastReceiver {
                                 db.updateNameStatus(id, SecondFragment.NAME_SYNCED_WITH_SERVER);
 
                                 //enviando  trasmision para refrescar la lista
-                                context.sendBroadcast(new Intent((SecondFragment.DATA_SAVED_BRODCAST)));
+                                context.sendBroadcast(new Intent((SecondFragment.DATA_SAVED_BROADCAST)));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -40,7 +40,7 @@ public class NameAdapter extends ArrayAdapter<Name> {
         //pasando nombres al text view
         textViewName.setText(name.getName());
 
-        //si el estado es 0 se muestra icono en cola , adicional miestra el icono
+        //si el estado es 0 se muestra icono en cola , adicional muestra el icono
         if (name.getStatus()==0)
             imageViewStatus.setImageResource(android.R.drawable.presence_away);
         else

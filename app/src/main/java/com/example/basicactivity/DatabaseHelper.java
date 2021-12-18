@@ -31,9 +31,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         /*Creación de la base de datos*/
         String sql = " CREATE TABLE " + TABLE_NAME
-                + " (" + COLUMN_ID + "INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_NAME + " VARCHAR, "
-                + COLUMN_STATE + "TINYINT);";
+                + COLUMN_STATE + " TINYINT);";
         db.execSQL(sql);
     }
 
