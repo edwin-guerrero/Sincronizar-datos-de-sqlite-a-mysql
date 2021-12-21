@@ -1,6 +1,7 @@
 package com.example.basicactivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.basicactivity.databinding.FragmentSecondBinding;
@@ -30,32 +32,10 @@ public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
 
-    //URl del webservice
-    public static final String URL_SAVE_NAME = "http:";
 
-    //objeto database
-    private DatabaseHelper db;
 
-    //vista objetos
-    private Button buttonSave;
-    private EditText editTextName;
-    private ListView listViewNames;
+    private Activity activity;
 
-    //Lista que almacena los nombres
-    private List<Name> names;
-
-    //1 sincronizado 0 no sincronizado
-    public static final int NAME_SYNCED_WITH_SERVER = 1;
-    public static final int NAME_NOT_SYNCED_WITH_SERVER = 0;
-
-    //trasmision para saber si los datos se sincornizaron
-    public static final String DATA_SAVED_BROADCAST = "net.simplifiedcoding.datasaved";
-
-    //Receptor de la trasmisión que indica el estado de la sincronozación
-    private BroadcastReceiver broadcastReceiver;
-
-    //adaptador listView  NameAdapter
-    private NameAdapter nameAdapter;
 
 
     @Override
@@ -65,26 +45,18 @@ public class SecondFragment extends Fragment {
 
     ) {
 
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
-
-        return binding.getRoot();
+        //binding = FragmentSecondBinding.inflate(inflater, container, false);
+        View view =inflater.inflate(R.layout.fragment_second,container,false);
+        //return binding.getRoot();
+        return view;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        db= new DatabaseHelper(getActivity().getApplicationContext());
-        names = new ArrayList<>();
 
-        loadNames();
 
-        //receptor de transmisión para actualizar el estado de sincronización
-        broadcastReceiver = new BroadcastReceiver(){
-            public void onReceive (Context context, Intent intent){
-                //Carga los registros nuevamente
-                loadNames();
-            }
-        };
+
 
         /*IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         filter
@@ -92,48 +64,17 @@ public class SecondFragment extends Fragment {
         registerReceiver (new NetworkStateChecker(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         registerReceiver (broadcastReceiver, new IntentFilter(DATA_SAVED_BROADCAST));*/
 
-
-
         //binding.listViewNames.setAdapter(new NameAdapter());
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+        /**binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveNameToLocalStorage(binding.editTextName.getText().toString(),0);
+                //saveNameToLocalStorage(binding.editTextName.getText().toString(),0);
             }
-        });
+        });*/
     }
 
-    /*Este metodo carga los nombres de la base local con estado de sincronizacion */
-    private void loadNames() {
-        names.clear();
-        Cursor cursor = db.getNames();
-        if (cursor.moveToFirst()){
-            do{
-                @SuppressLint("Range") Name name = new Name(
-                        cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)),
-                        cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_STATE))
-                );
-                names.add(name);
-            }while (cursor.moveToNext());
-        }
-        nameAdapter = new NameAdapter(getActivity().getApplicationContext(), R.layout.names, names);
-        binding.listViewNames.setAdapter(nameAdapter);
-        //listViewNames.setAdapter(nameAdapter);
 
-    }
-
-    /*Este metodo actualiza la lista*/
-    private void refreshlist(){nameAdapter.notifyDataSetChanged();}
-
-    /*Este metodo guarda los registros de forma local*/
-    private void saveNameToLocalStorage(String name, int status) {
-        binding.editTextName.setText("");
-        db.addName(name, status);
-        Name n = new Name(name, status);
-        names.add(n);
-        refreshlist();
-    }
 
     @Override
     public void onDestroyView() {

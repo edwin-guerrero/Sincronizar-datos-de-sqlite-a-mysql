@@ -9,18 +9,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class NameAdapter extends ArrayAdapter<Name> {
+public class NameAdapter extends RecyclerView {
 
-    /*Almacena todos los nombres de la lista*/
     private List<Name> names;
+
+    /*----------------------------------------------------------------------------------*/
+    /*Almacena todos los nombres de la lista*/
 
     private Context context;
 
 
-    public NameAdapter(@NonNull Context context, int resource, List<Name> names) {
+    /*public NameAdapter(@NonNull Context context, int resource, List<Name> names) {
         super(context, resource);
         this.context = context;
         this.names = names;
@@ -48,6 +51,6 @@ public class NameAdapter extends ArrayAdapter<Name> {
 
         return listViewItem;
 
-    }
+    }*/
 
 }

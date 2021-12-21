@@ -55,7 +55,7 @@ public class NetworkStateChecker extends BroadcastReceiver {
 }
     /*Si el registro se envio correctamente se atualiza en sqlite*/
     private void saveName(final int id, final String name) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, SecondFragment.URL_SAVE_NAME,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.URL_SAVE_NAME,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -63,10 +63,10 @@ public class NetworkStateChecker extends BroadcastReceiver {
                             JSONObject obj = new JSONObject(response);
                             if (!obj.getBoolean("error")) {
                                 //actualizar estado en sqlite
-                                db.updateNameStatus(id, SecondFragment.NAME_SYNCED_WITH_SERVER);
+                                db.updateNameStatus(id, MainActivity.NAME_SYNCED_WITH_SERVER);
 
                                 //enviando  trasmision para refrescar la lista
-                                context.sendBroadcast(new Intent((SecondFragment.DATA_SAVED_BROADCAST)));
+                                context.sendBroadcast(new Intent((MainActivity.DATA_SAVED_BROADCAST)));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
